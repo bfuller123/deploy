@@ -11,13 +11,16 @@ class Gameboard extends React.Component {
     pig: false,
     horse: false,
     goose: false,
-    dog: false,
+    dog: true,
     cow: false,
     donkey: false,
     cat: false,
     bird: false,
     sheep: false,
     goat: false,
+    animalToFind: animals.animals[3].find,
+    sound: animals.animals[3].sound,
+    score: 0
   }
 
   resetBoard = () => {
@@ -28,22 +31,42 @@ class Gameboard extends React.Component {
     }
   }
 
+
+  addPoint = () => {
+    let newScore = this.state.score + 1;
+    this.setState({score: newScore});
+  }
+
+  changeTargetAnimal = () => {
+    this.resetBoard();
+    let randNum = Math.floor(Math.random() * 10);
+    let animal = animals.animals[randNum];
+    let obj = {};
+    obj[animal.name] = true;
+    this.addPoint();
+    this.setState(obj);
+    this.setState({animalToFind: animal.find});
+    this.setState({sound: animal.sound});
+  }
+
+  resetGame = () => {
+    this.changeTargetAnimal();
+    this.setState({score: 0});
+  }
+
   handleClick = (animal) => {
-    if(this.state[animal] === false){
-      let obj = {};
-      obj[animal] = true;
-      this.setState(obj);
+    if(this.state[animal] === true){
+      this.changeTargetAnimal();
     }
     else {
-      alert('Game over');
-      this.resetBoard();
+      this.resetGame();
     }
   }
 
   render(){
     return (
       <div>
-        <Header text={"Animal Parade!"}/>
+        <Header text={"Animal Parade"} score={this.state.score}/>
         <div className="App-buttons">
           <ImageButton source={process.env.PUBLIC_URL + animals.animals[0].source} name={animals.animals[0].name} handleClick={this.handleClick}/>
           <ImageButton source={process.env.PUBLIC_URL + animals.animals[1].source} name={animals.animals[1].name} handleClick={this.handleClick}/>
@@ -56,8 +79,8 @@ class Gameboard extends React.Component {
           <ImageButton source={process.env.PUBLIC_URL + animals.animals[8].source} name={animals.animals[8].name} handleClick={this.handleClick}/>
           <ImageButton source={process.env.PUBLIC_URL + animals.animals[9].source} name={animals.animals[9].name} handleClick={this.handleClick}/>
         </div>
-        <Footer text={animals.animals[0].find} />
-        <AudioSample source={process.env.PUBLIC_URL + animals.animals[0].sound} />
+        <Footer text={this.state.animalToFind} />
+        <AudioSample source={process.env.PUBLIC_URL + this.state.sound} />
       </div>
     )
   }

@@ -8,7 +8,7 @@ class Footer extends React.Component {
   render(){
     return (
       <footer className="App-footer">
-        <h1 className="App-title" onClick={this.playSound}>{this.props.text}</h1>
+        <h1 className="Large" onClick={this.playSound}>{this.props.text}</h1>
       </footer>
     )
   }
